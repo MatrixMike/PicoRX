@@ -163,9 +163,18 @@ void process_cat_control(rx_settings & settings_to_apply, rx_status & status, rx
             printf("AI0;");
         }
     } else if (strncmp(cmd, "AG", 2) == 0) {
-        if (cmd[2] == ';') {
-            printf("AG0;");
-        }
+        if ((cmd[2] == '0') && (cmd[3] == ';')) 
+            {
+            printf("AG%03lu;",uint32_t(settings.global.volume*24));             
+            }
+        else {
+             uint32_t volume;
+             sscanf(cmd+3,"%lu",&volume);
+             volume=volume/24;
+             if (volume>9) volume=9;
+             settings.global.volume=volume;
+             settings_changed = true;            
+             }        
     } else if (strncmp(cmd, "XT", 2) == 0) {
         if (cmd[2] == ';') {
             printf("XT1;");
